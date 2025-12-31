@@ -64,80 +64,8 @@ export default function About() {
         <div className="h-px w-full bg-gray-300"></div>
       </div>
 
-      {/* About Us Section */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-4xl md:text-5xl font-serif text-gray-900 font-bold mb-12">
-              ABOUT US
-            </h2>
-            
-            <div className="max-w-4xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-12 items-center">
-                {/* Left side - Image placeholder */}
-                <div className="relative">
-                  <div className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-amber-100 to-amber-50 border border-gray-200">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-5xl mb-4">🏝️</div>
-                        <p className="text-gray-600 italic">Sri Lanka beauty</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-amber-200/30 rounded-full -z-10"></div>
-                  <div className="absolute -top-4 -left-4 w-16 h-16 bg-green-200/30 rounded-full -z-10"></div>
-                </div>
-                
-                {/* Right side - Content */}
-                <div className="text-left">
-                  <p className="text-gray-700 mb-6 leading-relaxed">
-                    We are passionate storytellers and travel enthusiasts dedicated to showcasing the true essence of Sri Lanka. Our mission is to bridge the gap between travelers and the rich cultural heritage of this beautiful island.
-                  </p>
-                  
-                  <p className="text-gray-700 mb-6 leading-relaxed">
-                    Through carefully curated content, authentic experiences, and reliable travel information, we help visitors discover the hidden gems and timeless stories that make Sri Lanka truly special.
-                  </p>
-                  
-                  <p className="text-gray-700 leading-relaxed">
-                    Whether you're planning your first visit or are a seasoned traveler returning to explore more, Tales of Ceylon is your trusted companion for an unforgettable Sri Lankan journey.
-                  </p>
-                  
-                  <div className="mt-10 pt-8 border-t border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Our Values</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-amber-500 rounded-full mr-3"></div>
-                        <span className="text-gray-700">Authenticity</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-amber-500 rounded-full mr-3"></div>
-                        <span className="text-gray-700">Cultural Respect</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-amber-500 rounded-full mr-3"></div>
-                        <span className="text-gray-700">Sustainable Tourism</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-amber-500 rounded-full mr-3"></div>
-                        <span className="text-gray-700">Quality Experiences</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Footer Note */}
-      <div className="border-t border-gray-200 mt-20 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} Tales of Ceylon. All rights reserved.
-          </p>
-        </div>
-      </div>
+
     </div>
   )
 }

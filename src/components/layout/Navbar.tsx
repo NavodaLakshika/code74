@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Search, X, ArrowRight } from 'lucide-react'
 
 const navItems = [
   { name: 'HOME', href: '/' },
-  { name: 'TALES OF CEYLON', href: '/tales' },
+  { name: 'CEYLON', href: '/tales' },
   { name: 'DESTINATIONS', href: '/destinations' },
   { name: 'EXPERIENCES', href: '/experiences' },
 ]
@@ -38,7 +38,7 @@ type HoverDetail = TalesDetail | DestinationsDetail | ExperiencesDetail;
 
 // Data for hover details (similar to your screenshot showing Colombo)
 const hoverDetails: Record<string, HoverDetail> = {
-  'TALES OF CEYLON': {
+  'CEYLON': {
     title: 'Tales of Ceylon',
     description: 'Discover the rich history and stories of Sri Lanka',
     categories: [
@@ -175,8 +175,7 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [hoveredNavItem, setHoveredNavItem] = useState<string | null>(null)
-  const [itemPosition, setItemPosition] = useState({ left: 0, width: 0 })
-  const navItemRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
+  const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
     const handleScroll = () => {
@@ -184,6 +183,15 @@ export default function Navbar() {
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setHoverPosition({ x: e.clientX, y: e.clientY })
+    }
+    
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
@@ -214,33 +222,28 @@ export default function Navbar() {
     }
   }, [isMenuOpen])
 
-  const handleMouseEnter = (itemName: string, element: HTMLDivElement) => {
+  const handleMouseEnter = (itemName: string, e: React.MouseEvent) => {
     setHoveredNavItem(itemName)
-    
-    // Get the exact position and width of the nav item
-    const rect = element.getBoundingClientRect()
-    setItemPosition({
-      left: rect.left + window.scrollX,
-      width: rect.width
-    })
   }
 
-  // Calculate position for hover panel to appear centered under nav item
+  // Calculate position for hover panel
   const getHoverPanelStyle = () => {
     if (!hoveredNavItem) return {}
     
     const panelWidth = 384 // w-96 = 384px
-    const calculatedLeft = itemPosition.left + (itemPosition.width / 2) - (panelWidth / 2)
+    const navbarHeight = 128 // h-32 = 128px
+    
+    // Position the panel under the cursor or centered
+    let left = hoverPosition.x - (panelWidth / 2)
     
     // Ensure the panel stays within viewport boundaries
     const viewportWidth = window.innerWidth
-    let left = Math.max(20, calculatedLeft) // Minimum 20px from left
+    left = Math.max(20, left) // Minimum 20px from left
     left = Math.min(left, viewportWidth - panelWidth - 20) // Maximum with 20px margin
     
     return {
       left: `${left}px`,
-      top: '100%', // Position directly under the navbar
-      marginTop: '8px' // Small gap
+      top: `${navbarHeight + 8}px`, // Position under navbar with small gap
     }
   }
 
@@ -256,25 +259,19 @@ export default function Navbar() {
             : 'bg-transparent h-32'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 mt-4 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+          <div className="flex items-center justify-between h-20  relative">
             
             {/* Left side - Navigation items with hover effect */}
-            <div className="hidden lg:flex items-center space-x-8">
-              {navItems.map((item) => (
-                <div
-                  key={item.name}
-                  ref={(el) => {
-                    if (el) {
-                      navItemRefs.current[item.name] = el
-                    } else {
-                      delete navItemRefs.current[item.name]
-                    }
-                  }}
-                  className="relative group"
-                  onMouseEnter={(e) => handleMouseEnter(item.name, e.currentTarget)}
-                  onMouseLeave={() => setHoveredNavItem(null)}
-                >
+           <div className="hidden lg:flex items-center space-x-16 mr-auto lg:ml-[-80px] xl:ml-[-100px] mt-4">
+
+  {navItems.map((item) => (
+    <div
+      key={item.name}
+      className="relative group"
+      onMouseEnter={(e) => handleMouseEnter(item.name, e)}
+      onMouseLeave={() => setHoveredNavItem(null)}
+    >
                   <a
                     href={item.href}
                     className="relative text-sm font-medium text-white transition-colors tracking-wide hover:text-amber-400 px-2 py-1"
@@ -305,7 +302,7 @@ export default function Navbar() {
             </div>
 
             {/* Center - Logo */}
-            <div className="absolute left-1/2 -translate-x-1/2 ml-8">
+            <div className="absolute left-1/2 -translate-x-1/2 ">
               <a href="/" className="group">
                 <div className="flex flex-col items-center space-y-2">
                   <div className="w-16 h-16 rounded-full overflow-hidden border border-white/30 shadow-lg group-hover:scale-105 transition-transform duration-300 mt-4">
@@ -325,10 +322,11 @@ export default function Navbar() {
             </div>
 
             {/* Right side - Search box and hamburger menu */}
-            <div className="flex items-center space-x-6">
+          <div className="flex ml-[600px] space-x-6">
+
               
               {/* Search Box - Desktop */}
-              <div className="hidden lg:flex items-center relative">
+              <div className="hidden lg:flex items-center relative ">
                 <div className="relative">
                   <input
                     type="text"
@@ -365,7 +363,7 @@ export default function Navbar() {
                 onClick={toggleMenu}
                 className="group relative flex flex-col items-center justify-center w-14 h-14"
               >
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 opacity-80 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" />
+                <div className="absolute inset-0 rounded-full  opacity-80 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" />
                 
                 <div className="relative z-10 flex flex-col items-center justify-center w-8 h-8 space-y-1.5">
                   <span className={`block h-0.5 w-6 bg-white transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
@@ -404,7 +402,7 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* HOVER DETAILS PANEL - Positioned under the nav item */}
+        {/* HOVER DETAILS PANEL - Appears when hovering over nav items */}
         {hoveredNavItem && hoverDetails[hoveredNavItem] && (
           <div 
             className="fixed z-40 w-96 bg-white/95 backdrop-blur-md shadow-2xl rounded-lg border border-gray-200
@@ -419,7 +417,7 @@ export default function Navbar() {
                 <h3 className="text-2xl font-bold text-slate-800">
                   {hoverDetails[hoveredNavItem].title}
                 </h3>
-                <p className="text-slate-600 mt-2">
+                <p className="text-slate-600 ">
                   {hoverDetails[hoveredNavItem].description}
                 </p>
               </div>
