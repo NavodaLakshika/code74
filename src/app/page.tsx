@@ -7,18 +7,23 @@ import Contact from '@/components/sections/Contact'
 import About from '@/components/sections/About'
 import Videosection from '@/components/sections/Videosection'
 import HolidayPlanner from '@/components/sections/HolidayPlanner'
+import After from '@/components/sections/After'
 
 export default function Home() {
   return (
     <>
       <Hero />
+      
       <About/>
+   
       <Services />
-      <HolidayPlanner />
-      <Videosection />
-      <Industries />
+         <Videosection />
+      <After />
+      {/* <HolidayPlanner />  */}
+ 
+      {/* <Industries />
       <Process />
-      <Testimonials />
+      <Testimonials /> */}
       <Contact />
     </>
   )

@@ -11,36 +11,34 @@ export default function Hero() {
     { 
       bgImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600',
       title: 'WEB DEVELOPMENT',
-      label: 'WEB DEV'
+      description: 'Custom web solutions built with modern technologies'
     },
     { 
       bgImage: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=1600',
       title: 'MOBILE APPLICATION',
-      label: 'MOBILE APP'
+      description: 'Native and cross-platform mobile experiences'
     },
     { 
       bgImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600',
       title: 'DESKTOP APPLICATION',
-      label: 'DESKTOP'
+      description: 'Powerful desktop software for enterprise needs'
     },
     { 
       bgImage: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600',
       title: 'ERP SOLUTIONS',
-      label: 'ERP'
+      description: 'Integrated business management systems'
     },
     { 
       bgImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1600',
       title: 'CLOUD & API SERVICES',
-      label: 'CLOUD API'
+      description: 'Scalable cloud infrastructure and API development'
     },
     { 
       bgImage: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1600',
       title: 'CUSTOM SOFTWARE',
-      label: 'CUSTOM'
+      description: 'Tailored solutions for your unique requirements'
     }
   ]
-
-  const categories = destinations
 
   useEffect(() => {
     if (!isAutoPlaying) {
@@ -51,9 +49,10 @@ export default function Hero() {
       return
     }
     
+    // Increase auto-play interval from 4s to 8s for slower transitions
     autoPlayRef.current = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % destinations.length)
-    }, 3000)
+    }, 8000) // Changed from 4000 to 8000
     
     return () => {
       if (autoPlayRef.current) {
@@ -65,25 +64,19 @@ export default function Hero() {
   const handleNext = () => {
     setIsAutoPlaying(false)
     setCurrentImage((prev) => (prev + 1) % destinations.length)
-    setTimeout(() => setIsAutoPlaying(true), 5000)
+    setTimeout(() => setIsAutoPlaying(true), 12000) // Increased from 6000 to 12000
   }
 
   const handlePrev = () => {
     setIsAutoPlaying(false)
     setCurrentImage((prev) => (prev - 1 + destinations.length) % destinations.length)
-    setTimeout(() => setIsAutoPlaying(true), 5000)
+    setTimeout(() => setIsAutoPlaying(true), 12000) // Increased from 6000 to 12000
   }
 
   const handleDotClick = (index: number) => {
     setIsAutoPlaying(false)
     setCurrentImage(index)
-    setTimeout(() => setIsAutoPlaying(true), 5000)
-  }
-
-  const handleCategoryClick = (index: number) => {
-    setIsAutoPlaying(false)
-    setCurrentImage(index)
-    setTimeout(() => setIsAutoPlaying(true), 5000)
+    setTimeout(() => setIsAutoPlaying(true), 12000) // Increased from 6000 to 12000
   }
 
   return (
@@ -92,160 +85,118 @@ export default function Hero() {
       {destinations.map((dest, index) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-opacity duration-700 ${
-            index === currentImage ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`absolute inset-0 transition-all duration-[2000ms] ease-[cubic-bezier(0.4,0,0.2,1)]`} // Changed duration from 1000ms to 2000ms
+          style={{
+            opacity: index === currentImage ? 1 : 0,
+            transform: index === currentImage ? 'scale(1)' : 'scale(1.05)',
+            transitionDelay: index === currentImage ? '0ms' : '0ms',
+          }}
         >
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${dest.bgImage})` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/80" />
+          {/* Added a wrapper div for even smoother fade effect */}
+          <div className={`absolute inset-0 transition-opacity duration-[3000ms] ease-out`} // Added extra transition layer
+               style={{
+                 opacity: index === currentImage ? 1 : 0,
+               }}>
+            <div 
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              style={{ 
+                backgroundImage: `url(${dest.bgImage})`,
+                // Added very slow zoom animation
+                animation: index === currentImage ? 'slowZoom 20s ease-in-out infinite alternate' : 'none'
+              }}
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/90" />
         </div>
       ))}
 
       {/* Main Content */}
-      <div className="relative z-10 min-h-screen flex flex-col">
-        {/* Hero Content */}
-        <div className="flex-1 flex flex-col justify-center px-4 sm:px-6 pb-32 pt-16">
-          <div className="max-w-6xl mx-auto w-full">
-            <h1 
-              key={`title-${currentImage}`}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white text-center mb-4 animate-title tracking-wider"
-              style={{ textShadow: '4px 4px 8px rgba(0,0,0,0.5)' }}
-            >
-              {destinations[currentImage].title}
-            </h1>
-          </div>
-        </div>
-
-        {/* COMPACT CATEGORIES SECTION */}
-        <div className="absolute bottom-0 left-0 right-0 pb-8 px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            
-            {/* Categories Container */}
-            <div className="relative">
-              {/* Subtle Background */}
-              <div  />
-              
-              {/* Compact Categories Grid */}
-              <div className="relative flex justify-center items-center gap-3 sm:gap-4 px-4 py-6">
-                {categories.map((category, index) => {
-                  const isActive = index === currentImage
-                  
-                  return (
-                    <button
-                      key={index}
-                      onClick={() => handleCategoryClick(index)}
-                      className="group relative flex flex-col items-center transition-all duration-500 hover:scale-105"
-                    >
-                      {/* Compact Circular Container */}
-                      <div className={`relative transition-all duration-500 ${
-                        isActive 
-                          ? 'w-20 h-20 sm:w-24 sm:h-24' 
-                          : 'w-14 h-14 sm:w-16 sm:h-16'
-                      }`}>
-                        
-                        {/* Subtle Glow for Active */}
-                        {isActive && (
-                          <div className="absolute inset-0 rounded-full bg-amber-400/40 blur-xl animate-pulse" />
-                        )}
-                        
-                        {/* Image Circle */}
-                        <div className={`relative w-full h-full rounded-full overflow-hidden transition-all duration-500 ${
-                          isActive 
-                            ? 'ring-3 ring-amber-400 ring-offset-2 ring-offset-black/50' 
-                            : 'ring-2 ring-white/30 group-hover:ring-white/50'
-                        }`}>
-                          <div 
-                            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                            style={{ backgroundImage: `url(${category.bgImage})` }}
-                          />
-                          
-                          {/* Gradient Overlay */}
-                          <div className={`absolute inset-0 bg-gradient-to-b transition-opacity duration-500 ${
-                            isActive 
-                              ? 'from-transparent to-amber-900/30' 
-                              : 'from-black/10 to-black/50 group-hover:from-transparent'
-                          }`} />
-                        </div>
-
-                        {/* Small Active Dot */}
-                        {isActive && (
-                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-amber-400 rounded-full flex items-center justify-center shadow-lg shadow-amber-500/50">
-                            <div className="w-2 h-2 bg-white rounded-full" />
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Compact Label */}
-                      <div className={`mt-2 transition-all duration-500 ${
-                        isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-90'
-                      }`}>
-                        <p className={`text-center font-semibold uppercase tracking-wider transition-all duration-500 ${
-                          isActive 
-                            ? 'text-amber-400 text-[10px] sm:text-xs' 
-                            : 'text-white text-[9px] sm:text-[10px] group-hover:text-amber-300'
-                        }`}
-                        style={{ 
-                          textShadow: isActive ? '0 1px 4px rgba(251, 191, 36, 0.5)' : '0 1px 3px rgba(0,0,0,0.8)'
-                        }}>
-                          {category.label}
-                        </p>
-                      </div>
-                    </button>
-                  )
-                })}
-              </div>
-
-              {/* Minimal Info Text */}
-              {/* <div className="relative text-center pb-2">
-                <p className="text-white/60 text-xs">
-                  <span className="text-amber-400 font-bold">{currentImage + 1}</span>/{categories.length}
-                </p>
-              </div> */}
-            </div>
-          </div>
-        </div>
-
-        {/* Compact Navigation */}
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col items-center gap-3 z-20">
-          <button
-            onClick={handlePrev}
-            className="p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:border-amber-400/50 transition-all duration-300 group"
+      <div className="relative z-10 min-h-screen flex flex-col justify-center px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto w-full text-center">
+          {/* Title */}
+          <h1 
+            key={`title-${currentImage}`}
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-bold text-white mb-6"
+            style={{ 
+              textShadow: '2px 2px 8px rgba(0,0,0,0.7)',
+              animation: `fadeIn 1.5s ease-out forwards`,
+              opacity: 0 
+            }}
           >
-            <ChevronLeft className="w-4 h-4 text-white group-hover:text-amber-400 transition-colors" />
-          </button>
+            {destinations[currentImage].title}
+          </h1>
 
-          <div className="flex flex-col gap-2 py-2">
-            {destinations.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => handleDotClick(index)}
-                className={`rounded-full transition-all duration-300 ${
-                  index === currentImage 
-                    ? 'w-1.5 h-5 bg-gradient-to-b from-amber-400 to-orange-500' 
-                    : 'w-1.5 h-1.5 bg-white/40 hover:bg-white/70 hover:h-3'
-                }`}
-              />
-            ))}
-          </div>
-
-          <button
-            onClick={handleNext}
-            className="p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:border-amber-400/50 transition-all duration-300 group"
+          {/* Description */}
+          <p 
+            key={`desc-${currentImage}`}
+            className="text-lg sm:text-xl md:text-2xl text-gray-200 font-light max-w-3xl mx-auto"
+            style={{ 
+              textShadow: '1px 1px 4px rgba(0,0,0,0.7)',
+              animation: `fadeIn 1.5s ease-out 0.3s forwards`,
+              opacity: 0 
+            }}
           >
-            <ChevronRight className="w-4 h-4 text-white group-hover:text-amber-400 transition-colors" />
-          </button>
-        </div>
+            {destinations[currentImage].description}
+          </p>
 
-        {/* Slide Counter */}
-        <div className="absolute bottom-4 left-4 flex items-center gap-2 z-20">
-          <div className="px-3 py-0.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
-            <span className="text-amber-400 font-bold text-base">{String(currentImage + 1).padStart(2, '0')}</span>
-            <span className="text-white/60 mx-1 text-sm">/</span>
-            <span className="text-white/60 text-sm">{String(destinations.length).padStart(2, '0')}</span>
+          {/* CTA Button */}
+          <div 
+            key={`btn-${currentImage}`}
+            className="mt-10"
+            style={{ 
+              animation: `fadeIn 1.5s ease-out 0.6s forwards`,
+              opacity: 0 
+            }}
+          >
+            <button className="px-8 py-4 bg-white text-gray-900 font-medium rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+              Learn More
+            </button>
           </div>
+        </div>
+      </div>
+
+      {/* Navigation Arrows */}
+      <div className="absolute left-4 right-4 top-1/2 -translate-y-1/2 flex justify-between items-center pointer-events-none z-20">
+        <button
+          onClick={handlePrev}
+          className="p-3 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 pointer-events-auto hover:scale-110"
+        >
+          <ChevronLeft className="w-6 h-6 text-white" />
+        </button>
+
+        <button
+          onClick={handleNext}
+          className="p-3 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 pointer-events-auto hover:scale-110"
+        >
+          <ChevronRight className="w-6 h-6 text-white" />
+        </button>
+      </div>
+
+      {/* Dot Navigation */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+        {destinations.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handleDotClick(index)}
+            className={`rounded-full transition-all duration-700 ease-out ${
+              index === currentImage 
+                ? 'w-12 h-2 bg-white shadow-lg' 
+                : 'w-2 h-2 bg-white/30 hover:bg-white/60'
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Slide Counter */}
+      <div className="absolute top-8 right-8 z-20">
+        <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-lg border border-white/20 transition-all duration-500 hover:bg-white/20">
+          <span className="text-white font-medium text-lg">
+            {String(currentImage + 1).padStart(2, '0')}
+          </span>
+          <span className="text-white/60 mx-2">/</span>
+          <span className="text-white/60">
+            {String(destinations.length).padStart(2, '0')}
+          </span>
         </div>
       </div>
 
@@ -253,7 +204,7 @@ export default function Hero() {
         @keyframes fadeIn {
           from {
             opacity: 0;
-            transform: translateY(10px);
+            transform: translateY(30px);
           }
           to {
             opacity: 1;
@@ -261,8 +212,18 @@ export default function Hero() {
           }
         }
 
-        .animate-title {
-          animation: fadeIn 0.5s ease-out forwards;
+        @keyframes slowZoom {
+          from {
+            transform: scale(1);
+          }
+          to {
+            transform: scale(1.1);
+          }
+        }
+
+        /* Smooth scrolling effect */
+        html {
+          scroll-behavior: smooth;
         }
       `}</style>
     </div>

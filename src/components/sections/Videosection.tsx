@@ -1,203 +1,173 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { Play, Pause, Volume2, Maximize } from 'lucide-react'
-
-export default function VideoSection() {
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isMuted, setIsMuted] = useState(true)
-  const [progress, setProgress] = useState(0)
-  const videoRef = useRef<HTMLVideoElement>(null)
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-      } else {
-        videoRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
-    }
-  }
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !videoRef.current.muted
-      setIsMuted(!isMuted)
-    }
-  }
-
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      const currentTime = videoRef.current.currentTime
-      const duration = videoRef.current.duration
-      setProgress((currentTime / duration) * 100)
-    }
-  }
-
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (videoRef.current) {
-      const rect = e.currentTarget.getBoundingClientRect()
-      const x = e.clientX - rect.left
-      const width = rect.width
-      const percentage = x / width
-      videoRef.current.currentTime = percentage * videoRef.current.duration
-      setProgress(percentage * 100)
-    }
-  }
-
-  const toggleFullscreen = () => {
-    if (videoRef.current) {
-      if (document.fullscreenElement) {
-        document.exitFullscreen()
-      } else {
-        videoRef.current.requestFullscreen()
-      }
-    }
-  }
-
+export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      {/* Background Video */}
+    <section className="relative h-[90vh] overflow-hidden">
+
+      {/* 🎬 BACKGROUND VIDEO */}
       <div className="absolute inset-0 z-0">
         <video
-          ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
-          src="/videos/ceylon-hero.mp4" // Replace with your video path
-          muted={isMuted}
+          autoPlay
           loop
-          onTimeUpdate={handleTimeUpdate}
-          onEnded={() => setIsPlaying(false)}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/20 to-black/60"></div>
+          muted
+          playsInline
+          className="w-full h-full object-cover opacity-90"
+        >
+          <source src="/aboutus.mp4" type="video/mp4" />
+        </video>
+
+        {/* GRADIENT OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-blue-900/40 to-slate-900/80" />
       </div>
 
-      {/* Content Overlay */}
-      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 w-full max-w-6xl mx-auto">
-        {/* EPIC TALES Text */}
-        <div className="mb-8">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white mb-4 tracking-tight">
-            EPIC TALES
-          </h1>
-          <div className="flex items-center justify-center space-x-4 mb-12">
-            <div className="w-16 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
-            <div className="text-xl text-amber-300 font-light italic">of Sri Lanka</div>
-            <div className="w-16 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
+      {/* 🌟 MAIN CONTENT */}
+      <div className="relative z-10 flex items-center justify-center h-full px-6">
+        <div className="max-w-6xl w-full">
+          
+          {/* ANIMATED BADGE */}
+          <div className="flex justify-center mb-8">
+            <div className="
+              inline-flex items-center gap-2 px-4 py-2 
+              bg-blue-600/20 backdrop-blur-sm 
+              border border-blue-500/30 rounded-full
+              animate-pulse
+            ">
+              <span className="w-2 h-2 bg-green-400 rounded-full animate-ping" />
+              <span className="text-sm text-blue-100 font-medium">
+                Crafting Digital Excellence
+              </span>
+            </div>
           </div>
-        </div>
 
-        {/* COME ALIVE Text */}
-        <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif font-bold text-white mb-12 leading-none">
-          COME ALIVE
-        </h2>
-
-        {/* Play Button */}
-        <div className="flex justify-center mb-16">
-          <button
-            onClick={togglePlay}
-            className="group relative bg-gradient-to-r from-amber-500 to-orange-500 rounded-full p-6 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-110"
-          >
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 blur-xl opacity-70 group-hover:opacity-100 transition-opacity"></div>
-            {isPlaying ? (
-              <Pause className="relative h-12 w-12 text-white" />
-            ) : (
-              <Play className="relative h-12 w-12 text-white ml-1" />
-            )}
-          </button>
-        </div>
-
-        {/* WATCH THE VIDEO Text */}
-        <div className="mb-16">
-          <div className="inline-flex items-center bg-black/30 backdrop-blur-sm rounded-full px-8 py-4 border border-white/20">
-            <span className="text-white text-lg font-semibold tracking-widest uppercase mr-4">
-              WATCH THE VIDEO
+          {/* MAIN HEADLINE */}
+          <h1 className="
+            text-5xl md:text-7xl lg:text-8xl 
+            font-bold text-white text-center mb-6
+            leading-tight
+          ">
+            <span className="
+              bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500 
+              bg-clip-text text-transparent
+              drop-shadow-lg
+            ">
+              Digital Innovation
             </span>
-            <div className="flex space-x-2">
-              <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
-              <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-              <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-            </div>
-          </div>
-        </div>
+            <br />
+            <span className="text-white drop-shadow-lg">
+              Meets Precision
+            </span>
+          </h1>
 
-        {/* Video Controls */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4">
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-            {/* Progress Bar */}
-            <div 
-              className="relative h-1.5 bg-gray-700 rounded-full mb-4 cursor-pointer group"
-              onClick={handleSeek}
-            >
+          {/* SUBTITLE */}
+          <p className="
+            text-xl md:text-2xl text-gray-200 
+            text-center max-w-3xl mx-auto mb-10
+            font-light leading-relaxed
+          ">
+            We transform visionary ideas into exceptional digital experiences 
+            through cutting-edge web development solutions
+          </p>
+
+          {/* CTA BUTTONS */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button className="
+              group relative px-8 py-4 
+              bg-gradient-to-r from-blue-600 to-cyan-500 
+              text-white font-semibold rounded-lg
+              hover:shadow-2xl hover:shadow-blue-500/30
+              transition-all duration-300
+              hover:-translate-y-1
+            ">
+              <span className="relative z-10">
+                Start Your Project
+              </span>
+              <div className="
+                absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 
+                rounded-lg opacity-0 group-hover:opacity-100
+                transition-opacity duration-300
+              " />
+            </button>
+
+            <button className="
+              px-8 py-4 
+              bg-white/10 backdrop-blur-sm
+              border border-white/30
+              text-white font-semibold rounded-lg
+              hover:bg-white/20
+              transition-all duration-300
+              group
+            ">
+              <span className="flex items-center gap-2">
+                View Our Portfolio
+                <svg 
+                  className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          {/* TECH STACK BADGES */}
+          <div className="
+            flex flex-wrap justify-center gap-3 
+            mt-16 opacity-80
+          ">
+            {['React', 'Next.js', 'TypeScript', 'Tailwind', 'Node.js', 'AWS'].map((tech) => (
               <div 
-                className="absolute h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
-                style={{ width: `${progress}%` }}
+                key={tech}
+                className="
+                  px-4 py-2 
+                  bg-white/5 backdrop-blur-sm
+                  border border-white/10
+                  text-gray-300 text-sm rounded-full
+                  hover:border-blue-400/50 hover:text-blue-300
+                  transition-all duration-300
+                "
               >
-                <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                {tech}
               </div>
-            </div>
-
-            {/* Control Buttons */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={togglePlay}
-                  className="flex items-center text-white hover:text-amber-300 transition-colors"
-                >
-                  {isPlaying ? (
-                    <>
-                      <Pause className="h-5 w-5 mr-2" />
-                      <span className="text-sm">Pause</span>
-                    </>
-                  ) : (
-                    <>
-                      <Play className="h-5 w-5 mr-2" />
-                      <span className="text-sm">Play</span>
-                    </>
-                  )}
-                </button>
-
-                <button
-                  onClick={toggleMute}
-                  className="flex items-center text-white hover:text-amber-300 transition-colors"
-                >
-                  <Volume2 className="h-5 w-5 mr-2" />
-                  <span className="text-sm">{isMuted ? 'Unmute' : 'Mute'}</span>
-                </button>
-              </div>
-
-              <div className="text-white text-sm">
-                {videoRef.current ? 
-                  `${Math.floor(videoRef.current.currentTime || 0)}:${Math.floor((videoRef.current.currentTime || 0) % 60).toString().padStart(2, '0')} / 
-                   ${Math.floor(videoRef.current.duration || 0)}:${Math.floor((videoRef.current.duration || 0) % 60).toString().padStart(2, '0')}` 
-                  : '0:00 / 0:00'
-                }
-              </div>
-
-              <button
-                onClick={toggleFullscreen}
-                className="flex items-center text-white hover:text-amber-300 transition-colors"
-              >
-                <Maximize className="h-5 w-5" />
-              </button>
-            </div>
+            ))}
           </div>
         </div>
-
-        {/* Floating Elements */}
-        <div className="absolute top-20 left-10 w-24 h-24 bg-amber-400/10 rounded-full blur-xl"></div>
-        <div className="absolute bottom-20 right-10 w-32 h-32 bg-orange-400/10 rounded-full blur-xl"></div>
-        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-white/5 rounded-full blur-lg"></div>
-        
-        {/* Subtle Pattern */}
-        <div className="absolute inset-0 opacity-5" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-        }}></div>
       </div>
 
-      {/* Decorative Border */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/50 to-transparent"></div>
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-orange-400/50 to-transparent"></div>
+      {/* DECORATIVE ELEMENTS */}
+      <div className="
+        absolute bottom-0 left-0 right-0 
+        h-32 bg-gradient-to-t from-slate-900 to-transparent 
+        pointer-events-none
+      " />
+      
+      {/* ANIMATED GRID OVERLAY */}
+      <div className="
+        absolute inset-0 
+        bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),
+              linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)]
+        bg-[size:50px_50px]
+        opacity-30
+        pointer-events-none
+      " />
+
+      {/* SCROLL INDICATOR */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+        <div className="
+          w-6 h-10 
+          border-2 border-white/30 
+          rounded-full
+          flex justify-center
+        ">
+          <div className="
+            w-1 h-3 
+            bg-blue-400 
+            rounded-full mt-2
+            animate-bounce
+          " />
+        </div>
+      </div>
     </section>
   )
 }
