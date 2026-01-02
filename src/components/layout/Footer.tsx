@@ -4,23 +4,18 @@ import { Mail, Phone, Facebook, Instagram, Youtube, Linkedin } from 'lucide-reac
 
 export default function Footer() {
   return (
-    <footer className="relative bg-cover bg-center bg-no-repeat" style={{
-      backgroundImage: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2000)',
-    }}>
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm"></div>
-      
+    <footer className="relative bg-gray-900">
       {/* Content */}
       <div className="relative z-10">
         {/* Main Navigation */}
         <div className="border-b border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <nav className="flex flex-wrap justify-center gap-6 md:gap-10">
-              {['HOME', 'ABOUT US', 'DESTINATIONS', 'EXPERIENCES', 'PLAN YOUR VISIT TO SRI LANKA', 'CONTACT US'].map((item) => (
+            <nav className="flex flex-wrap justify-center gap-4 md:gap-8">
+              {['HOME', 'ABOUT', 'SERVICES', 'TECHNOLOGIES', 'CONTACT'].map((item) => (
                 <a
                   key={item}
-                  href="#"
-                  className="text-white text-sm font-medium tracking-wide hover:text-gray-300 transition-colors"
+                  href={`#${item.toLowerCase()}`}
+                  className="text-white text-sm font-medium tracking-wide hover:text-blue-400 transition-colors"
                 >
                   {item}
                 </a>
@@ -50,10 +45,10 @@ export default function Footer() {
                     <a
                       key={social.label}
                       href="#"
-                      className="h-12 w-12 border-2 border-white rounded-full flex items-center justify-center hover:bg-white hover:text-gray-900 transition-all duration-300"
+                      className="h-12 w-12 border-2 border-white/30 rounded-full flex items-center justify-center hover:bg-white hover:text-gray-900 transition-all duration-300"
                       aria-label={social.label}
                     >
-                      <Icon className="h-5 w-5 text-white hover:text-gray-900" />
+                      <Icon className="h-5 w-5 text-white" />
                     </a>
                   )
                 })}
@@ -62,16 +57,25 @@ export default function Footer() {
 
             {/* Contact Us */}
             <div className="flex flex-col items-center">
-              <h3 className="text-white text-lg font-semibold tracking-wide mb-6">
-                CONTACT US
-              </h3>
-              <div className="space-y-3 text-white">
-                <p className="font-semibold text-base">
-                  ANTYRA SOLUTIONS (PVT) LTD
-                </p>
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/30">
+                  <img
+                    src="/IMAGE16.png"
+                    alt="Code 74 Logo"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-white text-lg font-bold">
+                    CODE 74
+                  </h3>
+                  <p className="text-gray-400 text-sm">Software Solutions</p>
+                </div>
+              </div>
+              <div className="text-white">
                 <p className="text-sm leading-relaxed">
-                  419, 1, BATTARAMULLA, PANNIPITIYA RD, 12138<br />
-                  SRI LANKA
+                  Transforming businesses through<br />
+                  innovative software solutions
                 </p>
               </div>
             </div>
@@ -80,16 +84,16 @@ export default function Footer() {
             <div className="flex flex-col items-center md:items-end space-y-4">
               <a 
                 href="tel:+94777183746"
-                className="flex items-center text-white hover:text-gray-300 transition-colors"
+                className="flex items-center text-white hover:text-blue-400 transition-colors"
               >
                 <Phone className="h-5 w-5 mr-2" />
-                <span className="text-xl font-semibold tracking-wide">+94 77 718 3746</span>
+                <span className="text-lg font-semibold tracking-wide">+94 77 718 3746</span>
               </a>
               <a 
-                href="mailto:hello@talesofceylon.com"
-                className="text-white hover:text-gray-300 transition-colors text-base tracking-wide"
+                href="mailto:hello@code74.com"
+                className="text-white hover:text-blue-400 transition-colors text-base tracking-wide"
               >
-                HELLO@TALESOFCEYLON.COM
+                HELLO@CODE74.COM
               </a>
             </div>
           </div>
@@ -100,10 +104,10 @@ export default function Footer() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center">
               <p className="text-white text-sm font-medium tracking-wide mb-2">
-                CONCEPT AND DESIGN BY
+                CODE 74 SOFTWARE SOLUTIONS (PRIVATE) LIMITED
               </p>
-              <p className="text-white text-xs tracking-wide">
-                COPYRIGHTS 2024 - ANTYRA SOLUTIONS (PRIVATE) LIMITED
+              <p className="text-gray-400 text-xs tracking-wide">
+                © {new Date().getFullYear()} Code 74 Software Solutions. All rights reserved.
               </p>
             </div>
           </div>
