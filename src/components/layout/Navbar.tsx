@@ -250,6 +250,10 @@ export default function Navbar() {
                     />
                   </div>
                   <div className="text-center leading-tight">
+                 <span className="block text-[8px] tracking-[0.6em] text-white">
+  CODE 74
+</span>
+
                     <span className="block text-sm font-medium text-white">
                       SOFTWARE SOLUTIONS
                     </span>
