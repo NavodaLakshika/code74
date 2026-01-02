@@ -25,27 +25,24 @@ export default function Chatbot() {
   const handleSend = async () => {
     if (!input.trim()) return
 
-    // Add user message
     const userMessage = {
       id: messages.length + 1,
       text: input,
-      sender: 'user' as const,
+      sender: 'user',
       timestamp: new Date()
     }
     setMessages(prev => [...prev, userMessage])
     setInput('')
     setIsTyping(true)
 
-    // Simulate AI response delay
     await new Promise(resolve => setTimeout(resolve, 1000))
 
-    // AI responses based on keywords
     const response = generateAIResponse(input.toLowerCase())
     
     const aiMessage = {
       id: messages.length + 2,
       text: response,
-      sender: 'bot' as const,
+      sender: 'bot',
       timestamp: new Date()
     }
     
@@ -68,8 +65,8 @@ export default function Chatbot() {
         "Our tech stack includes .NET, React, Next.js, Laravel, MySQL, and various cloud technologies for comprehensive software solutions."
       ],
       contact: [
-        "You can contact us at:\n• Phone: +94 77 718 3746\n• Email: hello@code74.com\n• Office: Colombo, Sri Lanka\n\nYou can also fill out the contact form on our website for a quick response.",
-        "Reach us via phone +94 77 718 3746 or email hello@code74.com. We're located in Colombo, Sri Lanka and happy to discuss your project!"
+        "You can contact us at:\n• Phone: +94 75 200 4019\n• Email: navodadevinfo1014@gmail.com\n• Office: Colombo, Sri Lanka\n\nYou can also fill out the contact form on our website for a quick response.",
+        "Reach us via phone +94 75 200 4019 or email navodadevinfo1014@gmail.com. We're located in Colombo, Sri Lanka and happy to discuss your project!"
       ],
       pricing: [
         "Our pricing depends on project scope and requirements. We offer custom quotes after understanding your specific needs. Would you like to schedule a free consultation?",
@@ -105,7 +102,7 @@ export default function Chatbot() {
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSend()
@@ -121,20 +118,20 @@ export default function Chatbot() {
       {/* Chatbot Toggle Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 p-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+        className="fixed bottom-6 left-6 z-40 p-3 bg-[#40485e] text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
       >
-        <MessageCircle className="w-5 h-5" />
+        <MessageCircle className="w-6 h-6" />
       </button>
 
       {/* Chatbot Window */}
       {isOpen && (
-        <div className="fixed bottom-20 right-6 z-50 w-80 md:w-96 bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden">
+        <div className="fixed bottom-20 left-6 z-50 w-80 md:w-96 bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden">
           {/* Chat Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-cyan-500 p-4 text-white">
+          <div className="bg-[#40485e] p-4 text-white">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                  <Bot className="w-5 h-5 text-blue-600" />
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center p-1">
+                  <img src="/IMAGE16.png" alt="Code 74 Logo" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <h3 className="font-bold text-sm">Code 74 AI Assistant</h3>
@@ -160,7 +157,7 @@ export default function Chatbot() {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.sender === 'user'
-                      ? 'bg-blue-500 text-white rounded-tr-none'
+                      ? 'bg-[#40485e] text-white rounded-tr-none'
                       : 'bg-gray-100 text-gray-800 rounded-tl-none'
                   }`}
                 >
@@ -239,7 +236,7 @@ export default function Chatbot() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Type your message..."
-                className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#40485e] focus:border-transparent resize-none"
                 rows={1}
               />
               <button
@@ -247,7 +244,7 @@ export default function Chatbot() {
                 disabled={!input.trim()}
                 className={`p-2 rounded-lg ${
                   input.trim()
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    ? 'bg-[#1a1f36] text-white hover:bg-[#252b47]'
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 } transition-colors`}
               >

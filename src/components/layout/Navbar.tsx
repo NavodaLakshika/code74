@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Search, X, ArrowRight } from 'lucide-react'
 
 const navItems = [
@@ -70,14 +70,35 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('')
   const [hoveredNavItem, setHoveredNavItem] = useState<string | null>(null)
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 })
+  const lastScrollY = useRef(0)
+  const [isHidden, setIsHidden] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10)
+      const currentScrollY = window.scrollY
+      
+      // Update scrolled state for background color
+      setScrolled(currentScrollY > 10)
+      
+      // Hide/show navbar logic - don't hide if menu is open
+      if (!isMenuOpen) {
+        if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+          // Scrolling down & past 100px - hide navbar
+          setIsHidden(true)
+        } else if (currentScrollY < lastScrollY.current) {
+          // Scrolling up - show navbar
+          setIsHidden(false)
+        }
+      }
+      
+      lastScrollY.current = currentScrollY
     }
-    window.addEventListener('scroll', handleScroll)
+    
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isMenuOpen])
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -88,7 +109,39 @@ export default function Navbar() {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen)
+  }
+
+  const closeMenu = () => {
+    setIsMenuOpen(false)
+  }
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMenuOpen && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        closeMenu()
+      }
+    }
+
+    // Handle Escape key
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isMenuOpen) {
+        closeMenu()
+      }
+    }
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', handleEscapeKey)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEscapeKey)
+    }
+  }, [isMenuOpen])
 
   const handleSearchSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
@@ -139,12 +192,13 @@ export default function Navbar() {
 
   return (
     <>
+      {/* Main Navbar - Hidden when scrolling down */}
       <nav
-        className={`fixed left-0 z-50 w-full transition-all duration-300 ${
-          isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        className={`fixed left-0 z-40 w-full transition-all duration-300 ${
+          isHidden && !isMenuOpen ? '-translate-y-full' : 'translate-y-0'
         } ${
           scrolled
-            ? 'bg-[#1a1f36] h-32 backdrop-blur-sm shadow-md'
+            ? 'bg-[#40485e] h-32 backdrop-blur-sm shadow-md'
             : 'bg-transparent h-32'
         }`}
       >
@@ -236,9 +290,11 @@ export default function Navbar() {
                 <Search className="h-5 w-5" />
               </button>
               
+              {/* Hamburger Button in Navbar */}
               <button
                 onClick={toggleMenu}
-                className="group relative flex flex-col items-center justify-center w-14 h-14"
+                className="group relative flex flex-col items-center justify-center w-14 h-14 z-40"
+                aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               >
                 <div className="absolute inset-0 rounded-full opacity-80 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" />
                 
@@ -355,8 +411,27 @@ export default function Navbar() {
         )}
       </nav>
 
+      {/* Floating Hamburger Button when navbar is hidden */}
+      {isHidden && !isMenuOpen && (
+        <button
+          onClick={toggleMenu}
+          className="fixed top-4 right-4 z-50 group flex flex-col items-center justify-center w-14 h-14 rounded-full bg-[#40485e]/90 backdrop-blur-md hover:bg-[#40485e] transition-all duration-300 shadow-lg"
+          aria-label="Open menu"
+        >
+          <div className="relative z-10 flex flex-col items-center justify-center w-8 h-8 space-y-1.5">
+            <span className="block h-0.5 w-6 bg-white" />
+            <span className="block h-0.5 w-6 bg-white" />
+            <span className="block h-0.5 w-6 bg-white" />
+          </div>
+          <span className="absolute -bottom-6 text-xs font-medium text-white tracking-wide">
+            MENU
+          </span>
+        </button>
+      )}
+
+      {/* Menu Overlay - Only shows when isMenuOpen is true */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-40 overflow-y-auto">
+        <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="absolute inset-0">
             <img
               src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1920&q=80"
@@ -366,39 +441,52 @@ export default function Navbar() {
             <div className="absolute inset-0 bg-white/90 backdrop-blur-sm" />
           </div>
 
-          <button
-            onClick={toggleMenu}
-            className="absolute top-8 right-8 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-slate-800/90 hover:bg-slate-700 transition-all duration-300 shadow-lg"
-          >
-            <X className="w-6 h-6 text-white" />
-          </button>
+          {/* Menu Content with ref */}
+          <div ref={menuRef} className="relative">
+            {/* Close Button - Fixed position */}
+            <button
+              ref={closeButtonRef}
+              onClick={closeMenu}
+              className="fixed top-8 right-8 z-60 w-12 h-12 flex items-center justify-center rounded-full bg-slate-800/90 hover:bg-slate-700 transition-all duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
+              aria-label="Close menu"
+            >
+              <X className="w-6 h-6 text-white" />
+            </button>
 
-          <div className="relative pt-24 pb-20">
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-12">
-                {megaMenuData.map((section, index) => (
-                  <div key={index} className="space-y-5">
-                    <h3 className="text-base font-bold text-slate-800 uppercase tracking-wider pb-3 border-b-2 border-slate-300">
-                      {section.category}
-                    </h3>
-                    <ul className="space-y-3">
-                      {section.items.map((item, itemIndex) => (
-                        <li key={itemIndex}>
-                          <a
-                            href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
-                            className="text-slate-700 hover:text-slate-900 transition-colors text-[15px] font-normal block leading-relaxed"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            {item}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+            <div className="relative pt-24 pb-20">
+              <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-12">
+                  {megaMenuData.map((section, index) => (
+                    <div key={index} className="space-y-5">
+                      <h3 className="text-base font-bold text-slate-800 uppercase tracking-wider pb-3 border-b-2 border-slate-300">
+                        {section.category}
+                      </h3>
+                      <ul className="space-y-3">
+                        {section.items.map((item, itemIndex) => (
+                          <li key={itemIndex}>
+                            <a
+                              href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
+                              className="text-slate-700 hover:text-slate-900 transition-colors text-[15px] font-normal block leading-relaxed"
+                              onClick={closeMenu}
+                            >
+                              {item}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
+
+          {/* Click outside to close overlay */}
+          <div 
+            className="absolute inset-0 z-40"
+            onClick={closeMenu}
+            aria-hidden="true"
+          />
         </div>
       )}
     </>

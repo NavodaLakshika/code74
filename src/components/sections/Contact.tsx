@@ -25,17 +25,29 @@ export default function Contact() {
     'Other'
   ]
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    
-    await new Promise(resolve => setTimeout(resolve, 1200))
-    
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-    
-    setTimeout(() => {
-      setIsSubmitted(false)
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setIsSubmitting(true)
+
+  try {
+    const response = await fetch('https://formspree.io/f/mqeaprnz', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        company: formData.company,
+        service: formData.service,
+        message: formData.message,
+      }),
+    })
+
+    if (response.ok) {
+      setIsSubmitted(true)
       setFormData({
         name: '',
         email: '',
@@ -44,8 +56,16 @@ export default function Contact() {
         service: '',
         message: '',
       })
-    }, 3000)
+    } else {
+      alert('Failed to send message')
+    }
+  } catch (error) {
+    alert('Something went wrong. Please try again.')
+  } finally {
+    setIsSubmitting(false)
   }
+}
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -100,7 +120,7 @@ export default function Contact() {
                       href="tel:+94777183746" 
                       className="text-base text-gray-700 hover:text-gray-900 transition-colors"
                     >
-                      +94 77 718 3746
+                      +94 75 200 4019
                     </a>
                   </div>
                 </div>
@@ -117,7 +137,7 @@ export default function Contact() {
                       href="mailto:hello@code74.com" 
                       className="text-base text-gray-700 hover:text-gray-900 transition-colors"
                     >
-                      hello@code74.com
+                      navodadevinfo1014@gmail.com
                     </a>
                   </div>
                 </div>
@@ -132,7 +152,7 @@ export default function Contact() {
                     </h3>
                     <p className="text-base text-gray-700">
                       Code 74 Software Solutions<br />
-                      Colombo, Sri Lanka
+                      Sri Lanka
                     </p>
                   </div>
                 </div>
@@ -265,7 +285,7 @@ export default function Contact() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className={`w-full bg-blue-600 text-white py-4 rounded-lg font-medium text-base hover:bg-blue-700 transition-all duration-300 flex items-center justify-center ${
+                      className={`w-full bg-[#40485e] text-white py-4 rounded-lg font-medium text-base  transition-all duration-300 flex items-center justify-center ${
                         isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
                       }`}
                     >
